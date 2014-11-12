@@ -122,9 +122,17 @@ class Hugo_Export
             $output['excerpt'] = $post->post_excerpt;
         }
 
+        if (has_post_thumbnail($post->ID) ) {
+            $blog_url = get_bloginfo('url');
+            $image_attributes = wp_get_attachment_image_src(get_post_thumbnail_id($post->ID), 'full');
+            $image_relative = str_replace($blog_url, "", $image_attributes[0]);
+            $output['thumbnail'] = $image_relative;
+        }
+
+
         //preserve exact permalink, since Hugo doesn't support redirection?
         if ('page' !== $post->post_type) {
-            $output['permalink'] = str_replace(home_url(), '', get_permalink($post));
+            $output['url'] = str_replace(home_url(), '', get_permalink($post));
         }
 
         //convert traditional post_meta values, hide hidden values
